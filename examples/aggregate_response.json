@@ -1,0 +1,256 @@
+{
+    "counterfactual": {
+        "minimal_deletion_set_count": 5,
+        "scenarios": [
+            {
+                "deleted_source_rows": [
+                    "customers[cid=1]"
+                ],
+                "result": {
+                    "columns": [
+                        "c.region",
+                        "order_count",
+                        "total_amount",
+                        "min_amount",
+                        "max_amount"
+                    ],
+                    "row_count": 2,
+                    "rows": [
+                        [
+                            "north",
+                            1,
+                            300,
+                            300,
+                            300
+                        ],
+                        [
+                            "south",
+                            1,
+                            50,
+                            50,
+                            50
+                        ]
+                    ]
+                }
+            },
+            {
+                "deleted_source_rows": [
+                    "customers[cid=3]"
+                ],
+                "result": {
+                    "columns": [
+                        "c.region",
+                        "order_count",
+                        "total_amount",
+                        "min_amount",
+                        "max_amount"
+                    ],
+                    "row_count": 2,
+                    "rows": [
+                        [
+                            "north",
+                            2,
+                            300,
+                            100,
+                            200
+                        ],
+                        [
+                            "south",
+                            1,
+                            50,
+                            50,
+                            50
+                        ]
+                    ]
+                }
+            },
+            {
+                "deleted_source_rows": [
+                    "orders[oid=10]"
+                ],
+                "result": {
+                    "columns": [
+                        "c.region",
+                        "order_count",
+                        "total_amount",
+                        "min_amount",
+                        "max_amount"
+                    ],
+                    "row_count": 2,
+                    "rows": [
+                        [
+                            "north",
+                            2,
+                            500,
+                            200,
+                            300
+                        ],
+                        [
+                            "south",
+                            1,
+                            50,
+                            50,
+                            50
+                        ]
+                    ]
+                }
+            },
+            {
+                "deleted_source_rows": [
+                    "orders[oid=11]"
+                ],
+                "result": {
+                    "columns": [
+                        "c.region",
+                        "order_count",
+                        "total_amount",
+                        "min_amount",
+                        "max_amount"
+                    ],
+                    "row_count": 2,
+                    "rows": [
+                        [
+                            "north",
+                            2,
+                            400,
+                            100,
+                            300
+                        ],
+                        [
+                            "south",
+                            1,
+                            50,
+                            50,
+                            50
+                        ]
+                    ]
+                }
+            },
+            {
+                "deleted_source_rows": [
+                    "orders[oid=13]"
+                ],
+                "result": {
+                    "columns": [
+                        "c.region",
+                        "order_count",
+                        "total_amount",
+                        "min_amount",
+                        "max_amount"
+                    ],
+                    "row_count": 2,
+                    "rows": [
+                        [
+                            "north",
+                            2,
+                            300,
+                            100,
+                            200
+                        ],
+                        [
+                            "south",
+                            1,
+                            50,
+                            50,
+                            50
+                        ]
+                    ]
+                }
+            }
+        ],
+        "target": {
+            "output_index": 0,
+            "values": {
+                "c.region": "north",
+                "max_amount": 300,
+                "min_amount": 100,
+                "order_count": 3,
+                "total_amount": 600
+            }
+        }
+    },
+    "idempotency_key": "demo-agg-region-summary-v1",
+    "ok": true,
+    "output": {
+        "columns": [
+            "c.region",
+            "order_count",
+            "total_amount",
+            "min_amount",
+            "max_amount"
+        ],
+        "row_count": 2,
+        "rows": [
+            {
+                "output_index": 0,
+                "provenance_expr": "(customers[cid=1] * customers[cid=3] * orders[oid=10] * orders[oid=11] * orders[oid=13])",
+                "values": {
+                    "c.region": "north",
+                    "max_amount": 300,
+                    "min_amount": 100,
+                    "order_count": 3,
+                    "total_amount": 600
+                },
+                "witness_count": 1,
+                "witness_sets": [
+                    [
+                        "customers[cid=1]",
+                        "customers[cid=3]",
+                        "orders[oid=10]",
+                        "orders[oid=11]",
+                        "orders[oid=13]"
+                    ]
+                ]
+            },
+            {
+                "output_index": 1,
+                "provenance_expr": "(customers[cid=2] * orders[oid=12])",
+                "values": {
+                    "c.region": "south",
+                    "max_amount": 50,
+                    "min_amount": 50,
+                    "order_count": 1,
+                    "total_amount": 50
+                },
+                "witness_count": 1,
+                "witness_sets": [
+                    [
+                        "customers[cid=2]",
+                        "orders[oid=12]"
+                    ]
+                ]
+            }
+        ]
+    },
+    "request_fingerprint": "e9129e4124775dce441dabcc2e17292530129fe920e1b4297f65641ee89244f3",
+    "source_variables": [
+        {
+            "table": "customers",
+            "variable": "customers[cid=1]"
+        },
+        {
+            "table": "customers",
+            "variable": "customers[cid=2]"
+        },
+        {
+            "table": "customers",
+            "variable": "customers[cid=3]"
+        },
+        {
+            "table": "orders",
+            "variable": "orders[oid=10]"
+        },
+        {
+            "table": "orders",
+            "variable": "orders[oid=11]"
+        },
+        {
+            "table": "orders",
+            "variable": "orders[oid=12]"
+        },
+        {
+            "table": "orders",
+            "variable": "orders[oid=13]"
+        }
+    ]
+}

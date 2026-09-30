@@ -1,0 +1,52 @@
+{
+  "idempotency_key": "demo-agg-region-summary-v1",
+  "tables": [
+    {
+      "name": "customers",
+      "columns": [
+        {"name": "cid", "type": "integer"},
+        {"name": "cname", "type": "text"},
+        {"name": "region", "type": "text"}
+      ],
+      "primary_key": ["cid"],
+      "rows": [
+        {"cid": 1, "cname": "Alice", "region": "north"},
+        {"cid": 2, "cname": "Bob", "region": "south"},
+        {"cid": 3, "cname": "Carol", "region": "north"}
+      ]
+    },
+    {
+      "name": "orders",
+      "columns": [
+        {"name": "oid", "type": "integer"},
+        {"name": "cid", "type": "integer"},
+        {"name": "amount", "type": "integer"},
+        {"name": "status", "type": "text"}
+      ],
+      "primary_key": ["oid"],
+      "rows": [
+        {"oid": 10, "cid": 1, "amount": 100, "status": "paid"},
+        {"oid": 11, "cid": 1, "amount": 200, "status": "paid"},
+        {"oid": 12, "cid": 2, "amount": 50, "status": "unpaid"},
+        {"oid": 13, "cid": 3, "amount": 300, "status": "paid"}
+      ]
+    }
+  ],
+  "plan": {
+    "type": "group",
+    "by": ["c.region"],
+    "aggregates": [
+      {"name": "order_count", "func": "count"},
+      {"name": "total_amount", "func": "sum", "field": "o.amount"},
+      {"name": "min_amount", "func": "min", "field": "o.amount"},
+      {"name": "max_amount", "func": "max", "field": "o.amount"}
+    ],
+    "input": {
+      "type": "join",
+      "on": [["c.cid", "o.cid"]],
+      "left": {"type": "scan", "table": "customers", "alias": "c"},
+      "right": {"type": "scan", "table": "orders", "alias": "o"}
+    }
+  },
+  "counterfactual": {"output_index": 0}
+}

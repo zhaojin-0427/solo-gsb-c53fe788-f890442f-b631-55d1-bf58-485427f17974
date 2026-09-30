@@ -1,0 +1,153 @@
+{
+    "counterfactual": {
+        "minimal_deletion_set_count": 2,
+        "scenarios": [
+            {
+                "deleted_source_rows": [
+                    "customers[cid=1]"
+                ],
+                "result": {
+                    "columns": [
+                        "c.cname",
+                        "c.region",
+                        "o.oid",
+                        "o.amount"
+                    ],
+                    "row_count": 1,
+                    "rows": [
+                        [
+                            "Carol",
+                            "north",
+                            13,
+                            300
+                        ]
+                    ]
+                }
+            },
+            {
+                "deleted_source_rows": [
+                    "orders[oid=10]"
+                ],
+                "result": {
+                    "columns": [
+                        "c.cname",
+                        "c.region",
+                        "o.oid",
+                        "o.amount"
+                    ],
+                    "row_count": 2,
+                    "rows": [
+                        [
+                            "Alice",
+                            "north",
+                            11,
+                            200
+                        ],
+                        [
+                            "Carol",
+                            "north",
+                            13,
+                            300
+                        ]
+                    ]
+                }
+            }
+        ],
+        "target": {
+            "output_index": 0,
+            "values": {
+                "c.cname": "Alice",
+                "c.region": "north",
+                "o.amount": 100,
+                "o.oid": 10
+            }
+        }
+    },
+    "idempotency_key": "demo-spj-paid-orders-v1",
+    "ok": true,
+    "output": {
+        "columns": [
+            "c.cname",
+            "c.region",
+            "o.oid",
+            "o.amount"
+        ],
+        "row_count": 3,
+        "rows": [
+            {
+                "output_index": 0,
+                "provenance_expr": "(customers[cid=1] * orders[oid=10])",
+                "values": {
+                    "c.cname": "Alice",
+                    "c.region": "north",
+                    "o.amount": 100,
+                    "o.oid": 10
+                },
+                "witness_count": 1,
+                "witness_sets": [
+                    [
+                        "customers[cid=1]",
+                        "orders[oid=10]"
+                    ]
+                ]
+            },
+            {
+                "output_index": 1,
+                "provenance_expr": "(customers[cid=1] * orders[oid=11])",
+                "values": {
+                    "c.cname": "Alice",
+                    "c.region": "north",
+                    "o.amount": 200,
+                    "o.oid": 11
+                },
+                "witness_count": 1,
+                "witness_sets": [
+                    [
+                        "customers[cid=1]",
+                        "orders[oid=11]"
+                    ]
+                ]
+            },
+            {
+                "output_index": 2,
+                "provenance_expr": "(customers[cid=3] * orders[oid=13])",
+                "values": {
+                    "c.cname": "Carol",
+                    "c.region": "north",
+                    "o.amount": 300,
+                    "o.oid": 13
+                },
+                "witness_count": 1,
+                "witness_sets": [
+                    [
+                        "customers[cid=3]",
+                        "orders[oid=13]"
+                    ]
+                ]
+            }
+        ]
+    },
+    "request_fingerprint": "a7217e3622afb96523d4dbc5de3d422e94bb2c49c378a8d211e4d6094dbe37a8",
+    "source_variables": [
+        {
+            "table": "customers",
+            "variable": "customers[cid=1]"
+        },
+        {
+            "table": "customers",
+            "variable": "customers[cid=3]"
+        },
+        {
+            "table": "orders",
+            "variable": "orders[oid=10]"
+        },
+        {
+            "table": "orders",
+            "variable": "orders[oid=11]"
+        },
+        {
+            "table": "orders",
+            "variable": "orders[oid=13]"
+        }
+    ]
+}
